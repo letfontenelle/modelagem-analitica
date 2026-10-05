@@ -4,7 +4,8 @@ Projeto de Modelagem Analítica das vazões médias mensais de **Ilha Solteira (
 
 ## Comece aqui
 
-- **[Notebook executado e explicado](notebooks/ilha_solteira.ipynb)**: código, tabelas e gráficos em sequência didática.
+- **[Notebook executado](notebooks/ilha_solteira.ipynb)**: código, tabelas, gráficos e conclusão.
+- **[Explicação do código](docs/explicacao_codigo.md)**: conceitos, metodologia e orientações de estudo em documento separado.
 - **[Guia de estudo e apresentação em PDF](output/pdf/roteiro_ilha_solteira.pdf)**: dados, conceitos, decisões, resultados, código e preparação para perguntas.
 - **[Apresentação editável em PowerPoint](output/apresentacao_ilha_solteira.pptx)** e **[slides em PDF](output/pdf/apresentacao_ilha_solteira.pdf)**: 18 slides para 15–20 minutos, com gráficos e notas de fala.
 - **[Fala por slide](docs/roteiro_slides.md)** e **[correspondência com os exemplos](docs/como_seguimos_os_exemplos.md)**.
@@ -100,12 +101,12 @@ O script cria uma revisão temporária inédita, valida e copia para `SLIDES_OUT
 | `src/dados.py` | Extração e validação dos dados |
 | `src/modelos.py` | Testes, busca, ajustes, métricas, previsões e resíduos |
 | `src/graficos.py` | Figuras da análise em PNG e SVG |
-| `notebooks/` | Código didático em `.py` e `.ipynb` executado |
+| `notebooks/` | Código em `.py` e `.ipynb`, com resultados e conclusão |
 | `scripts/` | Execução, materiais e verificação |
 | `output/tables/` | Candidatos, validação, previsões, métricas, resíduos e resumos |
 | `output/figures/` | 12 gráficos em PNG e SVG |
 | `output/pdf/` | Roteiro de estudo e slides em PDF |
-| `docs/` | Mapeamento dos exemplos e fala por slide |
+| `docs/` | Explicação do código, mapeamento dos exemplos e fala por slide |
 
 ## Referências
 
