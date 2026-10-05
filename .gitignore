@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+tmp/
+node_modules/
+.codex-finalizer/
+.chart-data-*/
+.omo/
+*.log

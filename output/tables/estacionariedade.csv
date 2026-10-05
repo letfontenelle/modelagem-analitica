@@ -1,0 +1,11 @@
+serie,n,ADF,ADF_p,ADF_lags,KPSS,KPSS_p,avisos
+original,936,-4.518685303483962,0.00018190517953461813,21,0.5395352130790401,0.03276233939661259,
+log,936,-4.081858341828606,0.0010376028395764744,21,0.7733512939958461,0.01,"The test statistic is outside of the range of p-values available in the
+look-up table. The actual p-value is smaller than the p-value returned.
+"
+diff_log_1,935,-12.200593249888136,1.2257988918986435e-22,21,0.03340887382588157,0.1,"The test statistic is outside of the range of p-values available in the
+look-up table. The actual p-value is greater than the p-value returned.
+"
+diff_log_12,924,-8.19857866438893,7.334888295106232e-13,21,0.0345811822098026,0.1,"The test statistic is outside of the range of p-values available in the
+look-up table. The actual p-value is greater than the p-value returned.
+"

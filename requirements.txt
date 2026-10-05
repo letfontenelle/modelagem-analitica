@@ -1,0 +1,14 @@
+numpy>=2.2,<3
+pandas>=2.2,<3
+scipy>=1.15,<2
+statsmodels>=0.14.4,<0.15
+matplotlib>=3.10,<4
+pdfplumber>=0.11,<1
+reportlab>=4.3,<5
+pypdf>=5,<7
+nbformat>=5.10,<6
+nbclient>=0.10,<1
+nbconvert>=7.16,<8
+ipykernel>=6.29,<7
+jupyterlab>=4.3,<5
+jupytext>=1.17,<2

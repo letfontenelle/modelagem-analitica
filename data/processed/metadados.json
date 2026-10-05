@@ -1,0 +1,13 @@
+{
+  "fonte": "ILHA_SOLTEIRA.pdf",
+  "sha256": "32342d531cb48b2b94f23110cbc48d095d4e2aef2cf5faeb1c3c9b9feee24d52",
+  "n": 1032,
+  "inicio": "1931-01-01",
+  "fim": "2016-12-01",
+  "unidade": "m³/s (hipótese; não explicitada no PDF)",
+  "tipo_vazao": "não especificado no PDF",
+  "faltantes": 0,
+  "duplicatas": 0,
+  "transformacao_dados": "extração dos inteiros; sem imputação ou remoção de extremos",
+  "paginas": "1/2: 1931-1979; 3/4: 1980-2016; JAN-SET à esquerda e OUT-DEZ à direita"
+}

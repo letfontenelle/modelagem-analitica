@@ -1,0 +1,176 @@
+{
+  "n": 1032,
+  "inicio": "1931-01-01",
+  "fim": "2016-12-01",
+  "media": 5271.650193798449,
+  "mediana": 4194.0,
+  "desvio": 3095.1575238897817,
+  "minimo": 1212.0,
+  "data_minimo": "2014-10-01",
+  "maximo": 20314.0,
+  "data_maximo": "1983-02-01",
+  "mes_maior_media": 2,
+  "mes_menor_media": 9,
+  "selecionados": {
+    "ARIMA": {
+      "familia": "ARIMA",
+      "order": [
+        2,
+        0,
+        2
+      ],
+      "seasonal_order": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "trend": "c",
+      "id": "ARIMA_14"
+    },
+    "SARIMA": {
+      "familia": "SARIMA",
+      "order": [
+        1,
+        0,
+        0
+      ],
+      "seasonal_order": [
+        1,
+        0,
+        1,
+        12
+      ],
+      "trend": "c",
+      "id": "SARIMA_36"
+    }
+  },
+  "ranking_validacao": [
+    {
+      "familia": "SARIMA",
+      "id": "SARIMA_36",
+      "RMSE": 1566.833499002494,
+      "MAE": 1114.9398602781653,
+      "MAPE": 18.760613291675575,
+      "MASE": 0.7268185880728883
+    },
+    {
+      "familia": "SARIMA",
+      "id": "SARIMA_45",
+      "RMSE": 1603.6302531808838,
+      "MAE": 1141.5736943861677,
+      "MAPE": 19.17576245992668,
+      "MASE": 0.7441573452590504
+    },
+    {
+      "familia": "SARIMA",
+      "id": "SARIMA_41",
+      "RMSE": 1606.315477752535,
+      "MAE": 1144.9967432351245,
+      "MAPE": 19.16059922768282,
+      "MASE": 0.7463884696700707
+    },
+    {
+      "familia": "ARIMA",
+      "id": "ARIMA_14",
+      "RMSE": 1699.7476322016864,
+      "MAE": 1279.3701222485417,
+      "MAPE": 25.364831607734242,
+      "MASE": 0.8339598521056146
+    },
+    {
+      "familia": "ARIMA",
+      "id": "ARIMA_13",
+      "RMSE": 1810.676978430264,
+      "MAE": 1380.8144887580497,
+      "MAPE": 28.913111298324782,
+      "MASE": 0.9000341086017848
+    },
+    {
+      "familia": "ARIMA",
+      "id": "ARIMA_17",
+      "RMSE": 2735.487100277987,
+      "MAE": 2296.748903495448,
+      "MAPE": 45.674929107468316,
+      "MASE": 1.4970463884164253
+    },
+    {
+      "familia": "ARIMA",
+      "id": "ARIMA_11",
+      "RMSE": 20854.241989578277,
+      "MAE": 17407.810046065173,
+      "MAPE": 490.44266891086073,
+      "MASE": 11.34672062218561
+    }
+  ],
+  "metricas_teste": [
+    {
+      "modelo": "ARIMA",
+      "RMSE": 2390.4654078231492,
+      "MAE": 2122.3608628346137,
+      "MAPE": 76.82555389576021,
+      "MASE": 1.385408184688927,
+      "cobertura_95": 91.66666666666666,
+      "largura_media_95": 10908.001239921583
+    },
+    {
+      "modelo": "SARIMA",
+      "RMSE": 2233.743263260524,
+      "MAE": 1684.142177615811,
+      "MAPE": 52.30643700241866,
+      "MASE": 1.0993532711173988,
+      "cobertura_95": 83.33333333333334,
+      "largura_media_95": 6026.34022471459
+    },
+    {
+      "modelo": "Ingênuo sazonal",
+      "RMSE": 2012.5686323700863,
+      "MAE": 1508.6666666666667,
+      "MAPE": 45.47375236651313,
+      "MASE": 0.9848085613375896,
+      "cobertura_95": null,
+      "largura_media_95": null
+    },
+    {
+      "modelo": "Média por mês",
+      "RMSE": 2214.9255921597846,
+      "MAE": 1594.4026104417671,
+      "MAPE": 48.749617951527064,
+      "MASE": 1.0407741986182417,
+      "cobertura_95": null,
+      "largura_media_95": null
+    }
+  ],
+  "diagnosticos": [
+    {
+      "modelo": "ARIMA",
+      "LB12_p": 3.9364028407428977e-28,
+      "LB24_p": 3.952334441594377e-45,
+      "JB_p": 0.0009003117238618657,
+      "media_residuo": -0.006356939198242435,
+      "descarte_inicial": 24,
+      "model_df": 4,
+      "avisos_teste": "",
+      "avisos_final": ""
+    },
+    {
+      "modelo": "SARIMA",
+      "LB12_p": 0.0012142568426548098,
+      "LB24_p": 0.00021565639503260214,
+      "JB_p": 4.634051215485865e-15,
+      "media_residuo": 0.0440609215650742,
+      "descarte_inicial": 24,
+      "model_df": 3,
+      "avisos_teste": "",
+      "avisos_final": ""
+    }
+  ],
+  "media_ate_2013": 5325.820281124498,
+  "media_2014_2016": 3772.9444444444443,
+  "protocolo": {
+    "treino_inicial": "1931-2008",
+    "validacao": "2009-2013, cinco origens anuais de 12 meses",
+    "teste": "2014-2016, origem única em dez/2013, horizonte 36 meses",
+    "futuro": "2017, origem dez/2016, projeção histórica sem observações para conferir"
+  }
+}
