@@ -79,7 +79,7 @@ O `.ipynb` é a versão com resultados embutidos para Jupyter/GitHub; a versão 
 
 ## Regenerar os slides
 
-O código autoral está em [scripts/criar_slides.mjs](scripts/criar_slides.mjs), com a abertura em [scripts/abertura_regional.mjs](scripts/abertura_regional.mjs), usando `@oai/artifact-tool` e o runtime de apresentações do Codex. Os slides finais podem ser abertos normalmente sem esse runtime; regenerar o PPTX a partir do código requer o runtime e a skill usados na criação.
+O código autoral está em [scripts/criar_slides.mjs](scripts/criar_slides.mjs), com a abertura em [scripts/abertura_regional.mjs](scripts/abertura_regional.mjs) e o painel da base em [scripts/slide_base.mjs](scripts/slide_base.mjs), usando `@oai/artifact-tool` e o runtime de apresentações do Codex. Os slides finais podem ser abertos normalmente sem esse runtime; regenerar o PPTX a partir do código requer o runtime e a skill usados na criação.
 
 ```bash
 export RUNTIME_NODE_MODULES="$HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules"

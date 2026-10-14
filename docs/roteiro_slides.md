@@ -1,6 +1,6 @@
 # Roteiro da apresentação
 
-17 slides. Tempo sugerido de fala: 18 minutos e 35 segundos, com margem para transições até 20 minutos. As notas também estão no PPTX.
+17 slides. Tempo sugerido de fala: 19 minutos e 10 segundos, com margem para transições até 20 minutos. As notas também estão no PPTX.
 
 ## 1. Ilha Solteira e o rio Paraná
 
@@ -10,9 +10,9 @@ Tempo: 85 segundos. Comece pela região. A Usina Ilha Solteira fica no rio Paran
 
 Tempo: 60 segundos. Use a foto da Praça Paiaguás para apresentar a cidade. Ilha Solteira surgiu em 1968 para abrigar trabalhadores da construção da hidrelétrica. Em 18 de julho de 1973, a primeira unidade geradora entrou em operação. A relação entre cidade, rio e geração de energia dá contexto ao estudo. Faça a transição: agora vamos conhecer a série de vazões que o grupo recebeu. Fonte: https://www.ctgbr.com.br/unidade/uhe-ilha-solteira/ . Foto: Praça Paiaguás em Ilha Solteira-SP, Brasil, Mof0, 25 de agosto de 2008, https://commons.wikimedia.org/wiki/File:Pra%C3%A7a_Paiagu%C3%A1s_em_Ilha_Solteira-SP,_Brasil.jpg . Licença CC BY-SA 2.0, https://creativecommons.org/licenses/by-sa/2.0/ . Imagem integral, redimensionada, sem recorte. As fotografias ilustram os locais e não representam um registro atual de 2026.
 
-## 3. 86 anos de observações mensais
+## 3. A base de dados em um olhar
 
-Tempo: 50 segundos. Explique a passagem da tabela anual com 12 colunas para uma série longa, com uma data por linha. A base tem 1032 valores positivos e completos. A unidade não está explicitada no PDF. Evite afirmar m³/s como unidade confirmada. O documento também não identifica se são vazões naturais, afluentes ou defluentes. Fonte: data/processed/ilha_solteira_mensal.csv, extraído de ILHA_SOLTEIRA.pdf.
+Tempo: 85 segundos. Apresente os três números do topo: 1.032 observações, 86 anos de janeiro de 1931 a dezembro de 2016 e frequência de 12 valores por ano. Cada valor representa uma vazão média mensal. A fonte recebida é ILHA_SOLTEIRA.pdf. No documento, os anos e os meses estão organizados em uma tabela anual distribuída pelas páginas. A extração organiza uma linha por mês. O CSV tem as colunas data, vazao, pagina_pdf e linha_tabela, permitindo rastrear cada observação até sua origem. O índice é mensal, sem lacunas ou duplicatas, e todos os valores são positivos. Não foi necessário preencher meses ausentes. Explique o painel de estatísticas da série completa: média 5.271,65, mediana 4.194 e desvio padrão amostral 3.095,16. Os valores foram arredondados no slide para facilitar a leitura. O mínimo é 1.212 em outubro de 2014 e o máximo é 20.314 em fevereiro de 1983. As estatísticas descrevem a base e não são usadas para escolher parâmetros com os dados de teste. A fonte não explicita a unidade nem se a vazão é natural, afluente ou defluente. Não confirme m³/s sem outra documentação. A base termina em 2016 e não fornece observações de 2017. Fontes: data/raw/ILHA_SOLTEIRA.pdf, data/processed/ilha_solteira_mensal.csv, data/processed/metadados.json e output/resumo.json. Conferência independente dos valores e da regularidade: scripts/verificar.py.
 
 ## 4. A série combina sazonalidade e extremos
 

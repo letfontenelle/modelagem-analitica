@@ -6,6 +6,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createHash } from 'node:crypto';
 import { aplicarAberturaRegional } from './abertura_regional.mjs';
+import { aplicarSlideBase } from './slide_base.mjs';
 const root = path.resolve(import.meta.dirname, '..');
 const modules = process.env.RUNTIME_NODE_MODULES;
 const skill = process.env.SKILL_DIR;
@@ -100,11 +101,13 @@ text(s,'Base: ILHA_SOLTEIRA.pdf\nOrientação: EXEMPLO.pdf e EXEMPLO_01.pdf',76,
 text(s,'Tutoriais: DigitalOcean, GeeksforGeeks e Analytics Vidhya\nImplementação atual: documentação statsmodels',76,371,1120,120,27);
 text(s,'Notebook e tabelas permitem reproduzir os resultados',76,550,1120,65,29,C.teal,true);
 }
-await aplicarAberturaRegional(pres,{root,font,raw});
+if (pres.slides.items.length===18) await aplicarAberturaRegional(pres,{root,font,raw});
+else if (pres.slides.items.length!==17) throw new Error('A apresentação deve conter 17 slides, ou 18 na base original.');
+await aplicarSlideBase(pres,{font,summary});
 notes.length=0;
 owners.length=0;
 for (const [i,s] of pres.slides.items.entries()) {
-  const title=s.shapes.items.find(sh=>(sh.frame ?? sh.position).top===44);
+  const title=s.shapes.items.find(sh=>(sh.frame ?? sh.position).top===44 && String(sh.text).trim());
   notes.push({num:i+1,title:String(title.text),note:String(s.speakerNotes.text)});
   if (s.charts.items.length) owners.push(i+1);
 }
@@ -139,7 +142,7 @@ if (referencePath) {
     zip.file(relPath(name),relations);
     const externalData=sourceChart.xml.match(/<c:externalData[\s\S]*?<\/c:externalData>/)?.[0];
     if (!externalData) throw new Error(`Referência à planilha ausente em ${sourceChart.name}.`);
-    const namespacedData=externalData.replace('<c:externalData','<c:externalData xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"');
+    const namespacedData=externalData.includes('xmlns:r=') ? externalData : externalData.replace('<c:externalData','<c:externalData xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"');
     xml=xml.replace('</c:chartSpace>',namespacedData+'</c:chartSpace>');
     zip.file(name,xml);
   }
@@ -147,7 +150,7 @@ if (referencePath) {
   if (!contentTypes.includes('Extension="xlsx"')) contentTypes=contentTypes.replace('</Types>','<Default Extension="xlsx" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/></Types>');
   zip.file('[Content_Types].xml',contentTypes);
 }
-for(const name of Object.keys(zip.files).filter(n=>/^ppt\/(slides\/)?charts\/chart\d+\.xml$/.test(n))){let xml=await zip.file(name).async('string');const count=Number(xml.match(/<c:ptCount val="(\d+)"/)?.[1]||0);const skip=count>100?120:count===36?3:1;xml=xml.replace(/<\/c:catAx>/g,`<c:tickLblSkip val="${skip}"/><c:tickMarkSkip val="${skip}"/></c:catAx>`);zip.file(name,xml);}
+for(const name of Object.keys(zip.files).filter(n=>/^ppt\/(slides\/)?charts\/chart\d+\.xml$/.test(n))){let xml=await zip.file(name).async('string');const count=Number(xml.match(/<c:ptCount val="(\d+)"/)?.[1]||0);const skip=count>100?120:count===36?3:1;xml=xml.replace(/<c:tick(?:Lbl|Mark)Skip\b[^>]*\/>/g,'').replace(/<\/c:catAx>/g,`<c:tickLblSkip val="${skip}"/><c:tickMarkSkip val="${skip}"/></c:catAx>`);zip.file(name,xml);}
 await fs.writeFile(candidate,await zip.generateAsync({type:'nodebuffer'}));
 const final=path.join(root,process.env.SLIDES_OUTPUT || 'output/apresentacao_ilha_solteira.pptx');
 const revision=Date.now();
