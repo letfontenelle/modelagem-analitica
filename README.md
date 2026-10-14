@@ -6,7 +6,8 @@ Projeto de Modelagem Analítica das vazões médias mensais de **Ilha Solteira (
 
 - **[Notebook executado](notebooks/ilha_solteira.ipynb)**: código, tabelas, gráficos e conclusão.
 - **[Explicação do código](docs/explicacao_codigo.md)**: conceitos, metodologia e orientações de estudo em documento separado.
-- **[Guia de estudo e apresentação em PDF](output/pdf/roteiro_ilha_solteira.pdf)**: dados, conceitos, decisões, resultados, código e preparação para perguntas.
+- **[Roteiro resumido de apresentação em PDF](output/pdf/roteiro_apresentacao.pdf)**: o que falar em cada um dos 13 slides e como interpretar os gráficos.
+- **[Material técnico completo em PDF](output/pdf/roteiro_ilha_solteira.pdf)**: dados, conceitos, decisões, resultados, código e preparação para perguntas.
 - **[Apresentação editável em PowerPoint](output/apresentacao_ilha_solteira.pptx)** e **[slides em PDF](output/pdf/apresentacao_ilha_solteira.pdf)**: 13 slides para 15–20 minutos, com foco nos resultados, gráficos editáveis e notas de fala. A abertura reúne o mapa de localização, a vista aérea da cidade enviada pelo grupo e o ciclo sazonal das vazões. [Origem das imagens](assets/fotos/creditos.md).
 - **[Fala por slide](docs/roteiro_slides.md)** e **[correspondência com os exemplos](docs/como_seguimos_os_exemplos.md)**.
 - **[Notebook em Python para o Zed](notebooks/ilha_solteira.py)**, organizado em células `# %%`.
@@ -51,6 +52,7 @@ python -m ipykernel install --user --name ilha-solteira --display-name "Python (
 python scripts/analisar.py
 python -m src.graficos
 python scripts/criar_roteiro.py
+python scripts/criar_roteiro_apresentacao.py
 ```
 
 O notebook entregue já está executado. Para abrir no JupyterLab:

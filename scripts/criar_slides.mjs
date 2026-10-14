@@ -116,7 +116,7 @@ for (const [i,s] of pres.slides.items.entries()) {
 }
 const slideCount=pres.slides.items.length;
 const duration=notes.reduce((a,n)=>a+Number(n.note.match(/Tempo: (\d+)/)[1]),0);
-await fs.writeFile(path.join(root,'docs/roteiro_slides.md'),`# Roteiro da apresentação\n\n${slideCount} slides. Tempo sugerido de fala: ${Math.floor(duration/60)} minutos e ${duration%60} segundos, com margem para transições até 20 minutos. As notas também estão no PPTX.\n\n`+notes.map(n=>`## ${n.num}. ${n.title}\n\n${n.note}\n`).join('\n'));
+await fs.writeFile(path.join(tmp,'notas_slides.md'),`# Notas internas da apresentação\n\n${slideCount} slides. Tempo sugerido de fala: ${Math.floor(duration/60)} minutos e ${duration%60} segundos.\n\n`+notes.map(n=>`## ${n.num}. ${n.title}\n\n${n.note}\n`).join('\n'));
 const candidate=path.join(tmp,'candidate.pptx');
 await (await PresentationFile.exportPptx(pres)).save(candidate);
 // Espaçamento nativo de rótulos preserva todas as datas na planilha editável.
