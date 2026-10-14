@@ -77,7 +77,7 @@ def verificar():
         slides = [n for n in nomes if re.fullmatch(r"ppt/slides/slide\d+\.xml", n)]
         charts = [n for n in nomes if re.fullmatch(r"ppt/(slides/)?charts/chart\d+\.xml", n)]
         notes = [n for n in nomes if re.fullmatch(r"ppt/notesSlides/notesSlide\d+\.xml", n)]
-        assert len(slides) == len(notes) == 17 and len(charts) >= 7
+        assert len(slides) == len(notes) == 16 and len(charts) >= 7
         print(f"PASS: PPTX com {len(slides)} slides, {len(charts)} gráficos editáveis e {len(notes)} notas.")
 
 

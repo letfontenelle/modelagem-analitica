@@ -1,6 +1,28 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
+/** Usa as duas imagens fornecidas pelo grupo e elimina o slide histórico. */
+export async function aplicarMapaCidade(pres, { root, font }) {
+  const first = pres.slides.items[0];
+  const layout = await first.export({ format: 'layout' });
+  const remove = layout.elements.filter(e => e.kind === 'image' ||
+    /^(A usina fica|Foto:|Localização de Ilha Solteira)/.test(e.text ?? ''));
+  pres.delete(remove.map(e => e.id));
+  const label = first.shapes.add({ geometry: 'textbox', position: { left: 72, top: 169, width: 455, height: 31 }, fill: 'none', line: { fill: 'none', width: 0 } });
+  label.text = 'Localização de Ilha Solteira (SP)';
+  label.text.style = { typeface: font, fontSize: 20, color: '#18343E', autoFit: 'none' };
+  first.images.add({ blob: await fs.readFile(path.join(root, 'assets/fotos/mapa_ilha_solteira.png')), contentType: 'image/png', alt: 'Mapa enviado pelo grupo: Ilha Solteira destacada no noroeste de São Paulo, com um mapa do Brasil no detalhe.', fit: 'contain', position: { left: 117, top: 204, width: 330, height: 207 } });
+  first.images.add({ blob: await fs.readFile(path.join(root, 'assets/fotos/vista_aerea_ilha_solteira.png')), contentType: 'image/png', alt: 'Vista aérea da cidade de Ilha Solteira enviada pelo grupo, com a marca Ilha News preservada.', fit: 'contain', position: { left: 72, top: 426, width: 420, height: 236.25 } });
+  first.speakerNotes.text = 'Tempo: 85 segundos. Comece pelo mapa: ele destaca Ilha Solteira no noroeste do estado de São Paulo e mostra a posição do estado no Brasil em um detalhe. Logo abaixo, a fotografia aérea apresenta a cidade. As duas imagens foram fornecidas pelo grupo em 14/10/2026 e são exibidas integralmente, sem recorte. A fotografia contém a marca Ilha News, preservada no slide. Autoria original, data e licença não foram informadas nos anexos. Passe ao gráfico à direita: cada coluna reúne a média daquele mês nos 86 anos da série. Fevereiro tem a maior média e setembro a menor. Essa sazonalidade motiva considerar um ciclo de 12 meses. O gráfico descreve a base completa e não participa da seleção de parâmetros. A unidade e a natureza da vazão não foram informadas no PDF. Faça a transição para o próximo slide: agora vamos conhecer a base recebida pelo grupo. Fontes: imagens fornecidas pelo grupo, salvas em assets/fotos/mapa_ilha_solteira.png e assets/fotos/vista_aerea_ilha_solteira.png; data/processed/ilha_solteira_mensal.csv.';
+  const cityIndex = pres.slides.items.findIndex(s => s.shapes.items.some(sh => String(sh.text) === 'A cidade e a usina'));
+  if (cityIndex >= 0) pres.slides.keep(pres.slides.items.map((_, i) => i).filter(i => i !== cityIndex));
+  pres.slides.items.forEach((s, i) => {
+    const footer = s.shapes.items.find(sh => /^\d{2}  Ilha Solteira$/.test(String(sh.text)));
+    if (!footer) throw new Error(`Rodapé ausente no slide ${i + 1}.`);
+    footer.text = `${String(i + 1).padStart(2, '0')}  Ilha Solteira`;
+  });
+}
+
 /** Atualiza a abertura, preservando os demais slides e seus gráficos. */
 export async function aplicarAberturaRegional(pres, { root, font, raw }) {
   if (pres.slides.items.length !== 18) throw new Error('A abertura espera a base original de 18 slides.');
