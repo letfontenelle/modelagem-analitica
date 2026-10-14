@@ -7,7 +7,7 @@ Projeto de Modelagem Analítica das vazões médias mensais de **Ilha Solteira (
 - **[Notebook executado](notebooks/ilha_solteira.ipynb)**: código, tabelas, gráficos e conclusão.
 - **[Explicação do código](docs/explicacao_codigo.md)**: conceitos, metodologia e orientações de estudo em documento separado.
 - **[Guia de estudo e apresentação em PDF](output/pdf/roteiro_ilha_solteira.pdf)**: dados, conceitos, decisões, resultados, código e preparação para perguntas.
-- **[Apresentação editável em PowerPoint](output/apresentacao_ilha_solteira.pptx)** e **[slides em PDF](output/pdf/apresentacao_ilha_solteira.pdf)**: 16 slides para 15–20 minutos, com gráficos e notas de fala. A abertura reúne o mapa de localização, a vista aérea da cidade enviada pelo grupo e o ciclo sazonal das vazões. [Origem das imagens](assets/fotos/creditos.md).
+- **[Apresentação editável em PowerPoint](output/apresentacao_ilha_solteira.pptx)** e **[slides em PDF](output/pdf/apresentacao_ilha_solteira.pdf)**: 13 slides para 15–20 minutos, com foco nos resultados, gráficos editáveis e notas de fala. A abertura reúne o mapa de localização, a vista aérea da cidade enviada pelo grupo e o ciclo sazonal das vazões. [Origem das imagens](assets/fotos/creditos.md).
 - **[Fala por slide](docs/roteiro_slides.md)** e **[correspondência com os exemplos](docs/como_seguimos_os_exemplos.md)**.
 - **[Notebook em Python para o Zed](notebooks/ilha_solteira.py)**, organizado em células `# %%`.
 

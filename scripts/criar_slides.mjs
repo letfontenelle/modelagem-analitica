@@ -7,6 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { createHash } from 'node:crypto';
 import { aplicarAberturaRegional, aplicarMapaCidade } from './abertura_regional.mjs';
 import { aplicarSlideBase } from './slide_base.mjs';
+import { aplicarEstiloResultados } from './estilo_resultados.mjs';
 const root = path.resolve(import.meta.dirname, '..');
 const modules = process.env.RUNTIME_NODE_MODULES;
 const skill = process.env.SKILL_DIR;
@@ -102,9 +103,10 @@ text(s,'Tutoriais: DigitalOcean, GeeksforGeeks e Analytics Vidhya\nImplementaç�
 text(s,'Notebook e tabelas permitem reproduzir os resultados',76,550,1120,65,29,C.teal,true);
 }
 if (pres.slides.items.length===18) await aplicarAberturaRegional(pres,{root,font,raw});
-else if (![16,17].includes(pres.slides.items.length)) throw new Error('A apresentação deve conter 16 ou 17 slides, ou 18 na base original.');
+else if (![13,16,17].includes(pres.slides.items.length)) throw new Error('Quantidade de slides não reconhecida.');
 await aplicarSlideBase(pres,{font,summary});
 await aplicarMapaCidade(pres,{root,font});
+await aplicarEstiloResultados(pres,{font,summary});
 notes.length=0;
 owners.length=0;
 for (const [i,s] of pres.slides.items.entries()) {
