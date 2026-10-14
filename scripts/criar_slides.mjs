@@ -5,6 +5,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createHash } from 'node:crypto';
+import { aplicarAberturaRegional } from './abertura_regional.mjs';
 const root = path.resolve(import.meta.dirname, '..');
 const modules = process.env.RUNTIME_NODE_MODULES;
 const skill = process.env.SKILL_DIR;
@@ -29,7 +30,8 @@ const metrics=summary.metricas_teste;
 const f=(x,d=0)=>Number(x).toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:d});
 const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 const C={navy:'#102E3A',teal:'#007F80',gold:'#C48730',paper:'#F6F3EB',ink:'#18343E',muted:'#5B7177',grid:'#D7DDD8',light:'#F8FAF7',grey:'#8B9A9D'};
-const pres=Presentation.create({slideSize:{width:1280,height:720}});
+const referencePath=process.env.SLIDES_SOURCE ? path.resolve(root,process.env.SLIDES_SOURCE) : null;
+const pres=referencePath ? await PresentationFile.importPptx(await FileBlob.load(referencePath)) : Presentation.create({slideSize:{width:1280,height:720}});
 const notes=[];
 const owners=[];
 function text(s,str,x,y,w,h,size=28,color=C.ink,bold=false){const sh=s.shapes.add({geometry:'textbox',position:{left:x,top:y,width:w,height:h},fill:'none',line:{fill:'none',width:0}});sh.text=str;sh.text.style={typeface:font,fontSize:size,color,bold,autoFit:'none'};return sh;}
@@ -38,6 +40,7 @@ function caption(s,str){text(s,str,70,610,1130,53,21,C.muted);}
 function chart(s,categories,series,{kind='line',height=425,top=166,legend=true,ymax,labels=false}={}){owners.push(pres.slides.items.length);const ch=s.charts.add(kind,{position:{left:70,top,width:1130,height},categories,series:series.map(r=>({...r,valuesFormatCode:'0',values:r.values.map(v=>Number(v.toFixed(4)))})),hasLegend:legend,legend:{position:'bottom',overlay:false,textStyle:{typeface:font,fontSize:20,fill:C.ink}},lineOptions:{smooth:false},barOptions:{direction:'column',grouping:'clustered',gapWidth:65},chartFill:C.paper,plotAreaFill:C.paper,xAxis:{textStyle:{typeface:font,fontSize:17,fill:C.ink},majorGridlines:null,line:{fill:C.grid,width:1}},yAxis:{min:0,...(ymax?{max:ymax}:{}),numberFormatCode:'0',textStyle:{typeface:font,fontSize:18,fill:C.ink},majorGridlines:{fill:C.grid,width:1}},dataLabels:{showValue:labels,position:'outEnd',textStyle:{typeface:font,fontSize:20,fill:C.ink}}});applyPresentationChartFont(ch,{fontFamily:font});return ch;}
 const line=(name,values,color,width=3)=>({name,values,fill:color,line:{fill:color,width},marker:{symbol:'none'}});
 const source='Fonte: data/processed/ilha_solteira_mensal.csv, extraído de ILHA_SOLTEIRA.pdf.';
+if (!referencePath) {
 let s=slide('Vazões de Ilha Solteira','Tempo: 45 segundos. Apresente o objetivo: comparar ARIMA e SARIMA e quantificar a incerteza. A base termina em dezembro de 2016. Todas as projeções para 2017 são históricas. '+source,true);
 text(s,'ARIMA e SARIMA',65,217,1100,100,72,C.light,true);
 text(s,'Previsões mensais com intervalos de 95%',70,340,1050,70,35,'#A5C8CB');
@@ -96,19 +99,64 @@ s=slide('Código, exemplos e referências','Tempo: 45 segundos. Apresente o note
 text(s,'Base: ILHA_SOLTEIRA.pdf\nOrientação: EXEMPLO.pdf e EXEMPLO_01.pdf',76,180,1120,130,32);
 text(s,'Tutoriais: DigitalOcean, GeeksforGeeks e Analytics Vidhya\nImplementação atual: documentação statsmodels',76,371,1120,120,27);
 text(s,'Notebook e tabelas permitem reproduzir os resultados',76,550,1120,65,29,C.teal,true);
+}
+await aplicarAberturaRegional(pres,{root,font,raw});
+notes.length=0;
+owners.length=0;
+for (const [i,s] of pres.slides.items.entries()) {
+  const title=s.shapes.items.find(sh=>(sh.frame ?? sh.position).top===44);
+  notes.push({num:i+1,title:String(title.text),note:String(s.speakerNotes.text)});
+  if (s.charts.items.length) owners.push(i+1);
+}
+const slideCount=pres.slides.items.length;
 const duration=notes.reduce((a,n)=>a+Number(n.note.match(/Tempo: (\d+)/)[1]),0);
-await fs.writeFile(path.join(root,'docs/roteiro_slides.md'),`# Roteiro da apresentação\n\n18 slides. Tempo sugerido de fala: ${Math.floor(duration/60)} minutos e ${duration%60} segundos, com margem para transições até 20 minutos. As notas também estão no PPTX.\n\n`+notes.map(n=>`## ${n.num}. ${n.title}\n\n${n.note}\n`).join('\n'));
+await fs.writeFile(path.join(root,'docs/roteiro_slides.md'),`# Roteiro da apresentação\n\n${slideCount} slides. Tempo sugerido de fala: ${Math.floor(duration/60)} minutos e ${duration%60} segundos, com margem para transições até 20 minutos. As notas também estão no PPTX.\n\n`+notes.map(n=>`## ${n.num}. ${n.title}\n\n${n.note}\n`).join('\n'));
 const candidate=path.join(tmp,'candidate.pptx');
 await (await PresentationFile.exportPptx(pres)).save(candidate);
 // Espaçamento nativo de rótulos preserva todas as datas na planilha editável.
 const zip=await JSZip.loadAsync(await fs.readFile(candidate));
+if (referencePath) {
+  // A importação mantém os valores, mas não transporta as planilhas anexas.
+  // Recuperamos os arquivos originais por correspondência exata dos dados.
+  const original=await JSZip.loadAsync(await fs.readFile(referencePath));
+  const chartNames=z=>Object.keys(z.files).filter(n=>/^ppt\/(slides\/)?charts\/chart\d+\.xml$/.test(n));
+  const dataKey=xml=>JSON.stringify([...xml.matchAll(/<c:ser>([\s\S]*?)<\/c:ser>/g)].map(m=>[...m[1].matchAll(/<c:v>([\s\S]*?)<\/c:v>/g)].map(v=>v[1])));
+  const originals=await Promise.all(chartNames(original).map(async name=>({name,xml:await original.file(name).async('string')})));
+  for (const name of chartNames(zip)) {
+    let xml=await zip.file(name).async('string');
+    if (!xml.includes('<c:f>')) continue;
+    const matches=originals.filter(item=>dataKey(item.xml)===dataKey(xml));
+    if (matches.length!==1) throw new Error(`Não foi possível identificar a planilha original de ${name}.`);
+    const sourceChart=matches[0];
+    const relPath=n=>path.posix.join(path.posix.dirname(n),'_rels',path.posix.basename(n)+'.rels');
+    let relations=await original.file(relPath(sourceChart.name)).async('string');
+    const target=relations.match(/Target="([^"]+\.xlsx)"/)?.[1];
+    if (!target) throw new Error(`Planilha original ausente em ${sourceChart.name}.`);
+    const sourceWorkbook=path.posix.normalize(path.posix.join(path.posix.dirname(sourceChart.name),target));
+    const preservedWorkbook='ppt/embeddings/source-'+path.posix.basename(sourceWorkbook);
+    zip.file(preservedWorkbook,await original.file(sourceWorkbook).async('nodebuffer'));
+    relations=relations.replace(target,path.posix.relative(path.posix.dirname(name),preservedWorkbook));
+    zip.file(relPath(name),relations);
+    const externalData=sourceChart.xml.match(/<c:externalData[\s\S]*?<\/c:externalData>/)?.[0];
+    if (!externalData) throw new Error(`Referência à planilha ausente em ${sourceChart.name}.`);
+    const namespacedData=externalData.replace('<c:externalData','<c:externalData xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"');
+    xml=xml.replace('</c:chartSpace>',namespacedData+'</c:chartSpace>');
+    zip.file(name,xml);
+  }
+  let contentTypes=await zip.file('[Content_Types].xml').async('string');
+  if (!contentTypes.includes('Extension="xlsx"')) contentTypes=contentTypes.replace('</Types>','<Default Extension="xlsx" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/></Types>');
+  zip.file('[Content_Types].xml',contentTypes);
+}
 for(const name of Object.keys(zip.files).filter(n=>/^ppt\/(slides\/)?charts\/chart\d+\.xml$/.test(n))){let xml=await zip.file(name).async('string');const count=Number(xml.match(/<c:ptCount val="(\d+)"/)?.[1]||0);const skip=count>100?120:count===36?3:1;xml=xml.replace(/<\/c:catAx>/g,`<c:tickLblSkip val="${skip}"/><c:tickMarkSkip val="${skip}"/></c:catAx>`);zip.file(name,xml);}
 await fs.writeFile(candidate,await zip.generateAsync({type:'nodebuffer'}));
 const final=path.join(root,process.env.SLIDES_OUTPUT || 'output/apresentacao_ilha_solteira.pptx');
 const revision=Date.now();
 const validated=path.join(tmp,`validated-${revision}.pptx`);
 const receipt=path.join(root,'.codex-finalizer',`apresentacao-${revision}.validation.json`);
-await finalizePresentation({workspaceDir:root,candidatePath:candidate,finalPath:validated,pythonExecutable:process.env.RUNTIME_PYTHON,integrityValidatorPath:path.join(skill,'container_tools/inspect_presentation_package_integrity.py'),layoutValidatorPath:path.join(skill,'container_tools/inspect_presentation_layout_geometry.py'),layoutArgs:['--expected-slide-size-emu','12192000,6858000','--validate-heading-fit'],explicitTotalSlideCount:18,requiredNativeChartOwnerSlides:[...new Set(owners)],requiredNativeTableOwnerSlides:[],materializeLiteralChartWorkbooks:true,fontPolicy:{basis:'design',families:[font]},verifyArtifactToolImport:true,receiptPath:receipt});
+// O gráfico da abertura usa dados literais completos e recebe uma nova planilha.
+// Na edição, os demais gráficos conservam as planilhas originais recuperadas acima.
+const fontPolicy=referencePath ? {basis:'reference',families:[font],referencePath,referenceSha256:createHash('sha256').update(await fs.readFile(referencePath)).digest('hex')} : {basis:'design',families:[font]};
+await finalizePresentation({workspaceDir:root,candidatePath:candidate,finalPath:validated,pythonExecutable:process.env.RUNTIME_PYTHON,integrityValidatorPath:path.join(skill,'container_tools/inspect_presentation_package_integrity.py'),layoutValidatorPath:path.join(skill,'container_tools/inspect_presentation_layout_geometry.py'),layoutArgs:['--expected-slide-size-emu','12192000,6858000','--validate-heading-fit'],explicitTotalSlideCount:slideCount,requiredNativeChartOwnerSlides:[...new Set(owners)],requiredNativeTableOwnerSlides:[],materializeLiteralChartWorkbooks:true,fontPolicy,verifyArtifactToolImport:true,receiptPath:receipt});
 await fs.copyFile(validated,final);
 await fs.copyFile(receipt,path.join(root,'.codex-finalizer/apresentacao.validation.json'));
 const finalPres=await PresentationFile.importPptx(await FileBlob.load(final));
@@ -116,9 +164,9 @@ const pdf=await PDFDocument.create();
 for (let i=0;i<finalPres.slides.items.length;i++){const blob=await finalPres.export({slide:finalPres.slides.items[i],format:'png',scale:1.5});const bytes=new Uint8Array(await blob.arrayBuffer());await fs.writeFile(path.join(tmp,`slide-${String(i+1).padStart(2,'0')}.png`),bytes);const img=await pdf.embedPng(bytes);const p=pdf.addPage([960,540]);p.drawImage(img,{x:0,y:0,width:960,height:540});}
 await fs.writeFile(path.join(root,'output/pdf/apresentacao_ilha_solteira.pdf'),await pdf.save());
 const zfinal=await JSZip.loadAsync(await fs.readFile(final));
-const evidence={invocation:'RUNTIME_NODE_MODULES=<bundled>/node/node_modules RUNTIME_PYTHON=<bundled>/python/bin/python3 SKILL_DIR=<presentations> node scripts/criar_slides.mjs',scenario:'Build 18-slide editable deck, native chart workbook snapshots, notes, rendered PDF',observables:{slides:Object.keys(zfinal.files).filter(n=>/^ppt\/slides\/slide\d+\.xml$/.test(n)).length,charts:Object.keys(zfinal.files).filter(n=>/^ppt\/(slides\/)?charts\/chart\d+\.xml$/.test(n)).length,notes:Object.keys(zfinal.files).filter(n=>/^ppt\/notesSlides\/notesSlide\d+\.xml$/.test(n)).length,pdfPages:pdf.getPageCount(),durationSeconds:duration},artifacts:{pptx:final,pdf:path.join(root,'output/pdf/apresentacao_ilha_solteira.pdf'),renders:tmp,finalizer:path.join(root,'.codex-finalizer/apresentacao.validation.json')},inputHashes:{},outputHashes:{},limitations:['PDF consists of high-resolution rendered slides; edit charts in the PPTX.','PowerPoint interactive edit test unavailable; native objects and embedded workbooks validated structurally.','Chart values rounded to four decimal places in editable workbooks.']};
+const evidence={invocation:'RUNTIME_NODE_MODULES=<bundled>/node/node_modules RUNTIME_PYTHON=<bundled>/python/bin/python3 SKILL_DIR=<presentations> node scripts/criar_slides.mjs',scenario:`Build ${slideCount}-slide editable deck, native chart workbook snapshots, notes, rendered PDF`,observables:{slides:Object.keys(zfinal.files).filter(n=>/^ppt\/slides\/slide\d+\.xml$/.test(n)).length,charts:Object.keys(zfinal.files).filter(n=>/^ppt\/(slides\/)?charts\/chart\d+\.xml$/.test(n)).length,notes:Object.keys(zfinal.files).filter(n=>/^ppt\/notesSlides\/notesSlide\d+\.xml$/.test(n)).length,pdfPages:pdf.getPageCount(),durationSeconds:duration},artifacts:{pptx:final,pdf:path.join(root,'output/pdf/apresentacao_ilha_solteira.pdf'),renders:tmp,finalizer:path.join(root,'.codex-finalizer/apresentacao.validation.json')},inputHashes:{},outputHashes:{},limitations:['PDF consists of high-resolution rendered slides; edit charts in the PPTX.','PowerPoint interactive edit test unavailable; native objects and embedded workbooks validated structurally.','Chart values rounded to four decimal places in editable workbooks.']};
 for(const p of ['output/resumo.json','output/tables/previsoes_teste.csv','output/tables/previsoes_2017.csv','data/processed/ilha_solteira_mensal.csv']) evidence.inputHashes[p]=createHash('sha256').update(await fs.readFile(path.join(root,p))).digest('hex');
 for(const p of [final,path.join(root,'output/pdf/apresentacao_ilha_solteira.pdf')]) evidence.outputHashes[p]=createHash('sha256').update(await fs.readFile(p)).digest('hex');
 await fs.mkdir(path.join(root,'.omo/evidence'),{recursive:true});
 await fs.writeFile(path.join(root,'.omo/evidence/slides-build.json'),JSON.stringify(evidence,null,2));
-console.log(JSON.stringify({slides:18,nativeChartSlides:[...new Set(owners)],notes:notes.length,font,pptx:final,pdf:'output/pdf/apresentacao_ilha_solteira.pdf'},null,2));
+console.log(JSON.stringify({slides:slideCount,nativeChartSlides:[...new Set(owners)],notes:notes.length,font,pptx:final,pdf:'output/pdf/apresentacao_ilha_solteira.pdf'},null,2));

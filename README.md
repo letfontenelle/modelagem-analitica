@@ -7,7 +7,7 @@ Projeto de Modelagem Analítica das vazões médias mensais de **Ilha Solteira (
 - **[Notebook executado](notebooks/ilha_solteira.ipynb)**: código, tabelas, gráficos e conclusão.
 - **[Explicação do código](docs/explicacao_codigo.md)**: conceitos, metodologia e orientações de estudo em documento separado.
 - **[Guia de estudo e apresentação em PDF](output/pdf/roteiro_ilha_solteira.pdf)**: dados, conceitos, decisões, resultados, código e preparação para perguntas.
-- **[Apresentação editável em PowerPoint](output/apresentacao_ilha_solteira.pptx)** e **[slides em PDF](output/pdf/apresentacao_ilha_solteira.pdf)**: 18 slides para 15–20 minutos, com gráficos e notas de fala.
+- **[Apresentação editável em PowerPoint](output/apresentacao_ilha_solteira.pptx)** e **[slides em PDF](output/pdf/apresentacao_ilha_solteira.pdf)**: 17 slides para 15–20 minutos, com gráficos e notas de fala. A abertura apresenta a região, o ciclo sazonal das vazões e [fotografias com créditos](assets/fotos/creditos.md).
 - **[Fala por slide](docs/roteiro_slides.md)** e **[correspondência com os exemplos](docs/como_seguimos_os_exemplos.md)**.
 - **[Notebook em Python para o Zed](notebooks/ilha_solteira.py)**, organizado em células `# %%`.
 
@@ -79,12 +79,12 @@ O `.ipynb` é a versão com resultados embutidos para Jupyter/GitHub; a versão 
 
 ## Regenerar os slides
 
-O código autoral está em [scripts/criar_slides.mjs](scripts/criar_slides.mjs), usando `@oai/artifact-tool` e o runtime de apresentações do Codex. Os slides finais podem ser abertos normalmente sem esse runtime; regenerar o PPTX a partir do código requer o runtime e a skill usados na criação.
+O código autoral está em [scripts/criar_slides.mjs](scripts/criar_slides.mjs), com a abertura em [scripts/abertura_regional.mjs](scripts/abertura_regional.mjs), usando `@oai/artifact-tool` e o runtime de apresentações do Codex. Os slides finais podem ser abertos normalmente sem esse runtime; regenerar o PPTX a partir do código requer o runtime e a skill usados na criação.
 
 ```bash
 export RUNTIME_NODE_MODULES="$HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules"
 export RUNTIME_PYTHON="$HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3"
-export SKILL_DIR="$HOME/.codex/plugins/cache/openai-primary-runtime/presentations/26.921.10847/skills/presentations"
+export SKILL_DIR="$HOME/.codex/plugins/cache/openai-primary-runtime/presentations/26.1013.11914/skills/presentations"
 SLIDES_OUTPUT=output/apresentacao_regenerada.pptx \
   "$HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node" scripts/criar_slides.mjs
 ```
