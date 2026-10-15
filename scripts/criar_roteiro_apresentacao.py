@@ -31,8 +31,10 @@ def criar():
     intro = ParagraphStyle("intro", parent=body, fontSize=9.5, leading=14,
                            textColor=colors.HexColor("#526C76"), spaceAfter=18)
     story = []
-    groups = {1: "Contexto e dados", 4: "Avaliação e desempenho",
-              7: "Previsões e intervalos", 11: "Diagnósticos e conclusão"}
+    groups = {1: "Contexto e dados", 3: "Histórico e avaliação",
+              5: "Como os modelos foram escolhidos", 6: "Como comparar os erros",
+              8: "Como ler os intervalos", 10: "Cobertura e diagnósticos",
+              12: "Projeção e conclusão"}
     for number, title, content in sections:
         n = int(number)
         if n in groups:
@@ -40,7 +42,7 @@ def criar():
                 story.append(PageBreak())
             story.append(Paragraph(groups[n], heading))
             if n == 1:
-                story.append(Paragraph("Guia dos 13 slides. Use as falas como apoio e aponte os resultados nos gráficos. Para 15-20 minutos, explique com calma e faça pausas nas comparações.", intro))
+                story.append(Paragraph("Guia dos 13 slides. Use ‘O que falar’ como fala curta e ‘Como interpretar’ para ler o slide. Os demais blocos são apoio de estudo e respostas ao professor; não precisam ser lidos na apresentação de 15-20 minutos.", intro))
         story.append(Paragraph(f"{n:02d} · {escape(title)}", heading))
         for paragraph in content.strip().split("\n\n"):
             text = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", escape(paragraph))
@@ -55,7 +57,7 @@ def criar():
         canvas.setFont("GuiaBold", 17)
         canvas.drawString(43, h - 32, "Ilha Solteira | Roteiro de apresentação")
         canvas.setFont("Guia", 9)
-        canvas.drawString(43, h - 49, "ARIMA e SARIMA · Guia resumido de estudo")
+        canvas.drawString(43, h - 49, "ARIMA e SARIMA · Falas, gráficos e conceitos essenciais")
         canvas.setFillColor(teal)
         canvas.setFont("Guia", 8)
         canvas.drawString(43, 29, "Leia junto com a apresentação de 13 slides.")
@@ -64,7 +66,7 @@ def criar():
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     doc = SimpleDocTemplate(str(OUTPUT), pagesize=A4, topMargin=87, bottomMargin=47,
                             leftMargin=43, rightMargin=43,
-                            title="Ilha Solteira - Roteiro resumido dos 13 slides",
+                            title="Ilha Solteira - Roteiro e guia de estudo dos 13 slides",
                             author="Projeto Ilha Solteira")
     doc.build(story, onFirstPage=page, onLaterPages=page)
     print(OUTPUT)
