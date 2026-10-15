@@ -6,7 +6,7 @@ Projeto de Modelagem Analítica das vazões médias mensais de **Ilha Solteira (
 
 - **[Notebook executado](notebooks/ilha_solteira.ipynb)**: código, tabelas, gráficos e conclusão.
 - **[Explicação do código](docs/explicacao_codigo.md)**: conceitos, metodologia e orientações de estudo em documento separado.
-- **[Roteiro de apresentação e guia de estudo em PDF](output/pdf/roteiro_apresentacao.pdf)**: falas para os 13 slides, leitura dos gráficos e explicações de AIC, RMSE, parâmetros, intervalos e diagnósticos.
+- **[Roteiro de apresentação e guia de estudo em PDF](output/pdf/roteiro_apresentacao.pdf)**: um slide por página, com explicações em linguagem simples, exemplos, leitura dos gráficos e uma fala curta para apresentar.
 - **[Material técnico completo em PDF](output/pdf/roteiro_ilha_solteira.pdf)**: dados, conceitos, decisões, resultados, código e preparação para perguntas.
 - **[Apresentação editável em PowerPoint](output/apresentacao_ilha_solteira.pptx)** e **[slides em PDF](output/pdf/apresentacao_ilha_solteira.pdf)**: 13 slides para 15–20 minutos, com foco nos resultados, gráficos editáveis e notas de fala. A abertura reúne o mapa de localização, a vista aérea da cidade enviada pelo grupo e o ciclo sazonal das vazões. [Origem das imagens](assets/fotos/creditos.md).
 - **[Fala por slide](docs/roteiro_slides.md)** e **[correspondência com os exemplos](docs/como_seguimos_os_exemplos.md)**.
